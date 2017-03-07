@@ -1,0 +1,41 @@
+language: python
+python:
+  - "3.3"
+  - "3.4"
+  - "3.5"
+
+install:
+  - sudo apt-get update
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels conda-forge --add channels defaults --add channels r --add channels bioconda
+  - conda update -q conda
+  - conda info -a
+  - conda create -q -n test-environment \
+        python=$TRAVIS_PYTHON_VERSION \
+        'sqt>=0.8.0' \
+        'pandas>=0.16.2' \
+        numpy \
+        matplotlib \
+        'snakemake>=3.9.0' \
+        'cutadapt' \
+        'xopen>=0.1.1' \
+        'seaborn>=0.6.0' \
+        'scipy=0.16.1' \
+        'pyyaml' \
+        'muscle' \
+        'pear' \
+        'flash' \
+        'igblast=1.4.0' \
+        'vsearch=1.9.7' \
+        'fastqc' \
+        'Cython'
+        'nose'
+  - source activate test-environment
+  - python setup.py install
+
+script:
+  - nosetests -P tests
